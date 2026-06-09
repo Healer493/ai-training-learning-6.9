@@ -1,5 +1,7 @@
 ﻿*
 !.github/
+!.github/workflows/
+!.github/workflows/deploy-pages.yml
 !README.md
 !index.html
 !.gitignore
