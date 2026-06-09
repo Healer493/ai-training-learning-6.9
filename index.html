@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理者AI学习路径｜WorkBuddy × Codex</title>
+  <style>
+    :root {
+      --bg-1: #07111c;
+      --bg-2: #0d1d30;
+      --bg-3: #132742;
+      --surface: rgba(11, 28, 45, 0.82);
+      --surface-2: rgba(12, 32, 50, 0.94);
+      --line: rgba(95, 228, 255, 0.15);
+      --line-2: rgba(95, 228, 255, 0.28);
+      --cyan: #5fe4ff;
+      --teal: #22c7d8;
+      --amber: #ffbe65;
+      --amber-2: #ffd892;
+      --text: rgba(240, 247, 255, 0.95);
+      --text-dim: rgba(202, 220, 239, 0.76);
+      --paper: #f7fbff;
+      --paper-2: #ffffff;
+      --ink: #132433;
+      --ink-soft: #546b7a;
+      --shadow: 0 24px 70px rgba(2, 10, 20, 0.34);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --max: 1220px;
+      --ease: 260ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 18%, rgba(95, 228, 255, 0.12), transparent 22%),
+        radial-gradient(circle at 88% 12%, rgba(255, 190, 101, 0.14), transparent 20%),
+        linear-gradient(180deg, #06101a 0%, #0b1828 38%, #10233a 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 18px 0 72px;
+      position: relative;
+    }
+
+    .shell::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(95, 228, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(95, 228, 255, 0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(circle at 50% 35%, rgba(0,0,0,0.95), rgba(0,0,0,0.25) 62%, transparent 100%);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 22px;
+      min-height: 84vh;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-visual,
+    .section {
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      background:
+        linear-gradient(180deg, rgba(10, 25, 40, 0.9), rgba(8, 20, 33, 0.92)),
+        linear-gradient(135deg, rgba(95, 228, 255, 0.08), transparent 36%);
+      border: 1px solid rgba(95, 228, 255, 0.13);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-copy {
+      padding: 38px 36px 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-visual {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-copy::before,
+    .hero-visual::before,
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(95, 228, 255, 0.08), transparent 24%),
+        radial-gradient(circle at 100% 0%, rgba(255, 190, 101, 0.1), transparent 22%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      margin-bottom: 20px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(95, 228, 255, 0.12);
+      color: var(--text-dim);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+
+    .eyebrow-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 18px rgba(95, 228, 255, 0.65);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+    }
+
+    .hero-lead {
+      max-width: 640px;
+      margin: 20px 0 26px;
+      color: var(--text-dim);
+      line-height: 1.85;
+      font-size: clamp(17px, 2vw, 21px);
+    }
+
+    .hero-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .tool-chip {
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(95, 228, 255, 0.12);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .hero-point {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(95, 228, 255, 0.08);
+      min-height: 118px;
+    }
+
+    .hero-point strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+
+    .hero-point span {
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .hero-visual-inner {
+      position: relative;
+      width: 100%;
+      min-height: 610px;
+      border-radius: 28px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(8, 20, 32, 0.96), rgba(6, 16, 26, 0.98)),
+        radial-gradient(circle, rgba(95,228,255,0.06) 1px, transparent 1px);
+      background-size: auto, 22px 22px;
+      border: 1px solid rgba(95, 228, 255, 0.12);
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .flow-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .tool-panel,
+    .result-card,
+    .goal-card {
+      position: relative;
+      border-radius: 24px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(14, 31, 49, 0.92), rgba(8, 19, 30, 0.96)),
+        linear-gradient(135deg, rgba(95, 228, 255, 0.08), transparent 36%);
+      border: 1px solid rgba(95, 228, 255, 0.16);
+      box-shadow: 0 16px 32px rgba(2, 10, 18, 0.28);
+    }
+
+    .tool-panel {
+      grid-column: 1 / span 2;
+      z-index: 1;
+    }
+
+    .goal-card {
+      z-index: 1;
+    }
+
+    .result-card {
+      grid-column: 1 / span 2;
+      z-index: 1;
+    }
+
+    .visual-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(95, 228, 255, 0.1);
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .visual-title {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .visual-copy {
+      margin: 0;
+      color: var(--text-dim);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .visual-list {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: 13px;
+    }
+
+    .orb {
+      position: relative;
+      justify-self: center;
+      align-self: center;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(255,255,255,0.96), rgba(204, 245, 255, 0.82) 52%, rgba(95, 228, 255, 0.24) 75%, transparent 76%),
+        linear-gradient(180deg, rgba(95, 228, 255, 0.24), transparent 80%);
+      box-shadow: 0 0 60px rgba(95, 228, 255, 0.26);
+      z-index: 1;
+    }
+
+    .orb::before,
+    .orb::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: #103548;
+      top: 72px;
+      width: 18px;
+      height: 18px;
+      box-shadow: 0 0 14px rgba(95, 228, 255, 0.45);
+    }
+
+    .orb::before {
+      left: 52px;
+    }
+
+    .orb::after {
+      right: 52px;
+    }
+
+    .orb-mouth {
+      position: absolute;
+      left: 50%;
+      bottom: 54px;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 10px;
+      border-radius: 999px;
+      background: #103548;
+      box-shadow: 0 0 14px rgba(95, 228, 255, 0.32);
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 24px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 540px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .background-grid,
+    .path-grid,
+    .result-grid {
+      position: relative;
+      z-index: 1;
+    }
+
+    .background-grid {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 16px;
+    }
+
+    .card,
+    .path-card,
+    .result-card-block {
+      border-radius: 24px;
+      padding: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(95, 228, 255, 0.08);
+    }
+
+    .card h3,
+    .path-card h3,
+    .result-card-block h3 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .card p,
+    .path-card p,
+    .result-card-block p {
+      margin: 0;
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .card ul,
+    .path-card ul,
+    .result-card-block ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .map-board {
+      position: relative;
+      border-radius: 28px;
+      padding: 22px 24px 28px;
+      background:
+        linear-gradient(180deg, rgba(8, 20, 33, 0.98), rgba(5, 14, 24, 0.98)),
+        radial-gradient(circle, rgba(95,228,255,0.05) 1px, transparent 1px);
+      background-size: auto, 22px 22px;
+      border: 1px solid rgba(95, 228, 255, 0.1);
+      overflow: hidden;
+    }
+
+    .map-board::before {
+      content: "";
+      position: absolute;
+      inset: 78px 28px 18px;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 540'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23ffbe65' stop-opacity='0.65'/%3E%3Cstop offset='55%25' stop-color='%235fe4ff' stop-opacity='0.9'/%3E%3Cstop offset='100%25' stop-color='%235fe4ff' stop-opacity='0.65'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M110 110 C220 110, 250 150, 360 150 C460 150, 470 90, 585 90 C720 90, 760 170, 885 170 C1020 170, 1020 260, 935 300 C820 355, 735 310, 620 310 C500 310, 470 385, 350 385 C225 385, 210 455, 105 455' fill='none' stroke='url(%23g)' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M107 110a6 6 0 1 0 12 0a6 6 0 1 0 -12 0M579 90a6 6 0 1 0 12 0a6 6 0 1 0 -12 0M929 300a6 6 0 1 0 12 0a6 6 0 1 0 -12 0M99 455a6 6 0 1 0 12 0a6 6 0 1 0 -12 0' fill='%235fe4ff'/%3E%3C/svg%3E")
+        center/100% 100% no-repeat;
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    .map-head {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .map-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .map-legend {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      color: var(--text-dim);
+      font-size: 12px;
+    }
+
+    .map-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.done {
+      background: #5fe4ff;
+      box-shadow: 0 0 12px rgba(95, 228, 255, 0.65);
+    }
+
+    .dot.current {
+      background: #ffbe65;
+      box-shadow: 0 0 12px rgba(255, 190, 101, 0.55);
+    }
+
+    .dot.locked {
+      background: rgba(255,255,255,0.22);
+    }
+
+    .path-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 34px 42px;
+      align-items: stretch;
+      padding: 8px 6px 6px;
+    }
+
+    .path-card {
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform var(--ease), border-color var(--ease), box-shadow var(--ease);
+      background:
+        linear-gradient(180deg, rgba(17, 37, 56, 0.96), rgba(10, 23, 37, 0.98)),
+        linear-gradient(135deg, rgba(95, 228, 255, 0.08), transparent 34%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .path-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(95, 228, 255, 0.24);
+      box-shadow: 0 20px 40px rgba(4, 12, 20, 0.28);
+    }
+
+    .path-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(95, 228, 255, 0.1), transparent 26%),
+        linear-gradient(135deg, rgba(255,255,255,0.05), transparent 36%);
+      pointer-events: none;
+    }
+
+    .path-card:nth-child(1),
+    .path-card:nth-child(2),
+    .path-card:nth-child(3) {
+      margin-bottom: 18px;
+    }
+
+    .path-card:nth-child(1) {
+      transform: translateY(18px);
+    }
+
+    .path-card:nth-child(2) {
+      transform: translateY(0);
+    }
+
+    .path-card:nth-child(3) {
+      transform: translateY(28px);
+    }
+
+    .path-card:nth-child(4) {
+      transform: translateY(34px);
+    }
+
+    .path-card:nth-child(5) {
+      transform: translateY(-2px);
+    }
+
+    .path-card:nth-child(6) {
+      transform: translateY(20px);
+    }
+
+    .path-no {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      background: rgba(95, 228, 255, 0.12);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .path-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(95, 228, 255, 0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .path-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 10px currentColor;
+      opacity: 0.9;
+    }
+
+    .path-card.is-current .path-status {
+      color: #ffbe65;
+    }
+
+    .path-card.is-open .path-status {
+      color: #5fe4ff;
+    }
+
+    .path-card.is-locked {
+      opacity: 0.72;
+      border-style: dashed;
+    }
+
+    .path-card.is-locked .path-status {
+      color: rgba(255,255,255,0.42);
+    }
+
+    .path-theme {
+      color: var(--amber-2);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(95, 228, 255, 0.08);
+      color: var(--text-dim);
+      font-size: 12px;
+    }
+
+    .open-btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      margin-top: 18px;
+      padding: 13px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #09212d;
+      background: linear-gradient(135deg, var(--cyan), #95fff4);
+      transition: transform var(--ease), box-shadow var(--ease);
+      width: fit-content;
+      box-shadow: 0 14px 28px rgba(34, 199, 216, 0.2);
+    }
+
+    .open-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .path-card.is-current .open-btn {
+      background: linear-gradient(135deg, var(--amber), #ffe2a9);
+      box-shadow: 0 14px 28px rgba(255, 190, 101, 0.2);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .result-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .mini-result {
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(95, 228, 255, 0.08);
+    }
+
+    .mini-result strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+
+    .mini-result span {
+      color: var(--text-dim);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .share-note {
+      margin-top: 14px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(95, 228, 255, 0.08), rgba(95, 228, 255, 0.03));
+      border: 1px solid rgba(95, 228, 255, 0.14);
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .share-note strong {
+      color: var(--text);
+    }
+
+    .lesson-stage {
+      display: none;
+      width: min(1440px, calc(100vw - 20px));
+      margin: 14px auto 28px;
+      min-height: calc(100vh - 28px);
+      border-radius: 34px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(95, 228, 255, 0.1), transparent 28%),
+        radial-gradient(circle at top right, rgba(255, 190, 101, 0.1), transparent 20%),
+        linear-gradient(180deg, rgba(7, 17, 29, 0.98), rgba(4, 10, 18, 0.98));
+      border: 1px solid rgba(95, 228, 255, 0.14);
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.34);
+    }
+
+    .lesson-stage.open {
+      display: block;
+    }
+
+    .modal {
+      display: none !important;
+    }
+
+    .lesson-stage-shell {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: calc(100vh - 28px);
+    }
+
+    .lesson-stage-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: start;
+      padding: 24px 28px 18px;
+      border-bottom: 1px solid rgba(95, 228, 255, 0.08);
+    }
+
+    .lesson-stage-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(95, 228, 255, 0.1);
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-bottom: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lesson-stage-header h2 {
+      margin: 0 0 10px;
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    .lesson-stage-header p {
+      margin: 0;
+      max-width: 860px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .lesson-stage-head-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: end;
+    }
+
+    .ghost-btn,
+    .nav-btn,
+    .deck-pill {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      transition: transform var(--ease), background var(--ease), border-color var(--ease);
+    }
+
+    .ghost-btn {
+      padding: 13px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(95, 228, 255, 0.1);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .ghost-btn:hover,
+    .nav-btn:hover,
+    .deck-pill:hover {
+      transform: translateY(-2px);
+    }
+
+    .lesson-stage-body {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 0;
+    }
+
+    .deck-sidebar {
+      padding: 22px 18px 24px 24px;
+      border-right: 1px solid rgba(95, 228, 255, 0.08);
+      background: rgba(255,255,255,0.02);
+      overflow: auto;
+    }
+
+    .deck-sidebar h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+    }
+
+    .deck-sidebar p {
+      margin: 0 0 16px;
+      color: var(--text-dim);
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .deck-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .deck-pill {
+      text-align: left;
+      padding: 14px 14px 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(95, 228, 255, 0.08);
+      color: var(--text);
+    }
+
+    .deck-pill.active {
+      background: linear-gradient(180deg, rgba(95, 228, 255, 0.16), rgba(95, 228, 255, 0.08));
+      border-color: rgba(95, 228, 255, 0.26);
+      box-shadow: 0 14px 28px rgba(12, 36, 50, 0.24);
+    }
+
+    .deck-pill small {
+      display: block;
+      color: var(--cyan);
+      margin-bottom: 6px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .deck-pill strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .lesson-canvas {
+      padding: 28px;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      overflow: auto;
+      min-height: 0;
+    }
+
+    .slide-poster {
+      width: min(100%, 900px);
+      min-height: 560px;
+      border-radius: 32px;
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(95, 228, 255, 0.14), transparent 20%),
+        radial-gradient(circle at bottom left, rgba(255, 190, 101, 0.12), transparent 24%),
+        linear-gradient(180deg, rgba(248, 252, 255, 0.98), rgba(233, 242, 248, 0.98));
+      color: var(--ink);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.24);
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 20px;
+    }
+
+    .slide-poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(95, 228, 255, 0.08), transparent 28%),
+        radial-gradient(circle at 85% 18%, rgba(12, 138, 168, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+
+    .poster-top,
+    .poster-main,
+    .poster-bottom {
+      position: relative;
+      z-index: 1;
+    }
+
+    .poster-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .poster-index,
+    .poster-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .poster-index {
+      background: rgba(19, 36, 51, 0.06);
+      color: var(--ink-soft);
+    }
+
+    .poster-chip {
+      background: rgba(95, 228, 255, 0.12);
+      color: #0d6e82;
+    }
+
+    .poster-title {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+      max-width: 740px;
+    }
+
+    .poster-lead {
+      margin: 0;
+      max-width: 760px;
+      color: var(--ink-soft);
+      line-height: 1.9;
+      font-size: 18px;
+    }
+
+    .poster-main {
+      display: grid;
+      align-content: start;
+      gap: 18px;
+    }
+
+    .poster-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .poster-block {
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(19, 36, 51, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    .poster-block strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .poster-block p {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .poster-block ul,
+    .poster-block ol {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--ink-soft);
+      line-height: 1.85;
+      font-size: 15px;
+    }
+
+    .poster-quote {
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(7, 20, 35, 0.96), rgba(16, 39, 61, 0.96));
+      color: #dff8ff;
+      font-size: 17px;
+      line-height: 1.9;
+      box-shadow: 0 18px 32px rgba(19, 36, 51, 0.16);
+      white-space: pre-wrap;
+    }
+
+    .poster-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-top: auto;
+    }
+
+    .poster-note {
+      max-width: 600px;
+      color: #6a7f90;
+      line-height: 1.75;
+      font-size: 14px;
+    }
+
+    .poster-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: end;
+    }
+
+    .poster-tags span {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(19, 36, 51, 0.06);
+      color: var(--ink-soft);
+      font-size: 12px;
+    }
+
+    .lesson-stage-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 28px 24px;
+      border-top: 1px solid rgba(95, 228, 255, 0.08);
+    }
+
+    .lesson-stage-progress {
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .lesson-stage-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 13px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .nav-btn.primary {
+      background: linear-gradient(135deg, var(--cyan), #95fff4);
+      color: #09212d;
+      box-shadow: 0 14px 28px rgba(34, 199, 216, 0.2);
+    }
+
+    .nav-btn.secondary {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(95, 228, 255, 0.1);
+      color: var(--text);
+    }
+
+    @media (max-width: 1160px) {
+      .hero,
+      .background-grid,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .path-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .path-card:nth-child(n) {
+        transform: none;
+        margin-bottom: 0;
+      }
+
+      .lesson-stage-body {
+        grid-template-columns: 1fr;
+      }
+
+      .deck-sidebar {
+        border-right: none;
+        border-bottom: 1px solid rgba(95, 228, 255, 0.08);
+      }
+
+      .slide-poster {
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .shell {
+        width: min(var(--max), calc(100vw - 16px));
+      }
+
+      .hero-copy,
+      .hero-visual,
+      .section {
+        border-radius: 24px;
+      }
+
+      .hero-copy {
+        padding: 26px 20px 22px;
+      }
+
+      .hero-points,
+      .path-grid,
+      .result-mini-grid,
+      .poster-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .map-head,
+      .map-legend {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .hero-visual-inner {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+      }
+
+      .tool-panel,
+      .result-card {
+        grid-column: auto;
+      }
+
+      .lesson-stage {
+        width: calc(100vw - 10px);
+        margin: 5px auto 14px;
+        border-radius: 24px;
+      }
+
+      .lesson-stage-shell {
+        min-height: calc(100vh - 10px);
+      }
+
+      .lesson-stage-header,
+      .lesson-canvas,
+      .lesson-stage-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .lesson-stage-footer,
+      .poster-top,
+      .poster-bottom,
+      .section-head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .lesson-stage-head-actions,
+      .poster-tags {
+        justify-content: start;
+      }
+
+      .slide-poster {
+        padding: 24px 20px;
+        min-height: auto;
+      }
+
+      .poster-title {
+        font-size: 34px;
+      }
+
+      .poster-lead {
+        font-size: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" id="homeView">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> 管理者AI学习项目 · WorkBuddy × Codex</div>
+        <h1>管理者 AI 学习路径</h1>
+        <p class="hero-lead">
+          这是一套围绕 <strong>WorkBuddy</strong> 和 <strong>Codex</strong> 设计的 6 节训练课。
+          目标不是学复杂技术，而是逐步把 AI 真正带进日常工作场景：
+          材料整理、内容起草、问题分析、决策支持、展示成果与个人助手雏形。
+        </p>
+        <div class="hero-tools">
+          <div class="tool-chip">WorkBuddy：快、轻、日常工作助手</div>
+          <div class="tool-chip">Codex：做成果、做页面、做展示</div>
+        </div>
+        <div class="hero-points">
+          <div class="hero-point">
+            <strong>统一授课</strong>
+            <span>一套课件、一条学习路径，避免同场分两条线授课。</span>
+          </div>
+          <div class="hero-point">
+            <strong>场景驱动</strong>
+            <span>每节课都对应一个真实工作场景，而不是空讲概念。</span>
+          </div>
+          <div class="hero-point">
+            <strong>最终可展示</strong>
+            <span>结营时形成真实工作案例与毕业成果展示。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-visual-inner">
+          <svg class="flow-svg" viewBox="0 0 720 610" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="flowLine" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#5fe4ff"/>
+                <stop offset="100%" stop-color="#ffbe65"/>
+              </linearGradient>
+            </defs>
+            <path d="M170 144 C240 176, 274 232, 360 304 C448 376, 520 392, 602 442" fill="none" stroke="url(#flowLine)" stroke-width="4" />
+            <path d="M554 144 C498 198, 460 224, 360 304 C264 382, 220 430, 180 500" fill="none" stroke="rgba(95,228,255,0.26)" stroke-width="3" stroke-dasharray="10 14" />
+            <circle cx="170" cy="144" r="8" fill="#5fe4ff"/>
+            <circle cx="554" cy="144" r="8" fill="#ffbe65"/>
+            <circle cx="602" cy="442" r="8" fill="#5fe4ff"/>
+            <circle cx="180" cy="500" r="8" fill="#ffbe65"/>
+          </svg>
+
+          <div class="tool-panel">
+            <div class="visual-badge">工具组合</div>
+            <h2 class="visual-title">WorkBuddy → Codex</h2>
+            <p class="visual-copy">先用 WorkBuddy 快速整理、提炼、分析，再用 Codex 把成果变成可展示页面或结构化输出。</p>
+            <ul class="visual-list">
+              <li>WorkBuddy：会议纪要、邮件、摘要、分析</li>
+              <li>Codex：页面、汇报成果、展示稿</li>
+            </ul>
+          </div>
+
+          <div class="goal-card">
+            <div class="visual-badge">学习目标一</div>
+            <h2 class="visual-title">把 AI 带进真实工作</h2>
+            <p class="visual-copy">先解决高频任务，再进入分析、判断和成果展示，不从概念出发，而从实际使用出发。</p>
+          </div>
+
+          <div class="result-card">
+            <div class="visual-badge">毕业成果</div>
+            <h2 class="visual-title">真实案例 + 展示成果</h2>
+            <p class="visual-copy">最终形成一套可持续使用的 AI 方法，并完成毕业展示页面或成果提纲。</p>
+          </div>
+
+          <div class="orb" aria-hidden="true">
+            <div class="orb-mouth"></div>
+          </div>
+        </div>
+        <div class="result-card-block">
+          <h3>手机分享与对外展示场景</h3>
+          <p>这份课件如果只是本机打开，适合讲师自己使用；如果要发给领导、同事，或者在手机上预览，就需要切换成可分享的网页访问方式。</p>
+          <div class="result-mini-grid">
+            <div class="mini-result">
+              <strong>适用场景</strong>
+              <span>课后发给学员复盘、发给领导预览毕业成果、在手机上演示学习路径与单节课件。</span>
+            </div>
+            <div class="mini-result">
+              <strong>推荐方式</strong>
+              <span>把本地文件用一个临时网页地址打开，再把这个地址发给手机或同事，而不是直接发送电脑里的文件路径。</span>
+            </div>
+          </div>
+          <div class="share-note">
+            <strong>当前这个 `file:///` 链接为什么手机打不开：</strong>
+            这是你电脑本地路径，只在这台电脑上有效。要给别人看，需要变成 `http://` 或 `https://` 这种网页地址。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>学习背景</h2>
+        </div>
+        <p>课程重点不是“学懂 AI 原理”，而是“敢把真实工作交给 AI 做第一轮处理”，并逐步形成稳定的使用方法。</p>
+      </div>
+      <div class="background-grid">
+        <div class="card">
+          <h3>为什么这样设计</h3>
+          <p>
+            对管理者来说，AI 学习最怕两件事：一是太技术，二是太空泛。所以课程只围绕两件事展开：
+            <strong>WorkBuddy 如何快速进入日常工作</strong>，
+            <strong>Codex 如何把成果做成更完整、更可展示的输出</strong>。
+          </p>
+          <ul>
+            <li>WorkBuddy 更适合做日常高频工作动作</li>
+            <li>Codex 更适合做结构化成果、页面和展示</li>
+            <li>每次只学一个核心动作，降低认知负担</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>学完之后能达到什么状态</h3>
+          <p>
+            学员不必成为 AI 专家，但应该能稳定完成几个关键动作：把任务讲清楚、让 AI 出初稿、让 AI 帮忙分析问题、
+            把结果整理成可展示成果，并逐步形成自己的个人助手雏形。
+          </p>
+          <ul>
+            <li>知道什么时候用 WorkBuddy 更顺手</li>
+            <li>知道什么时候请 Codex 帮忙做成果</li>
+            <li>知道怎样把真实工作案例沉淀下来</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="path">
+      <div class="section-head">
+        <div>
+          <h2>学习路径</h2>
+        </div>
+        <p>6 节课从易到难推进，每节课都对应一个明确使用场景。点击“打开课件”，即可进入逐页 PPT 讲稿版课件。</p>
+      </div>
+      <div class="map-board">
+        <div class="map-head">
+          <div class="map-title">学习地图</div>
+          <div class="map-legend">
+            <span><i class="dot done"></i> 已解锁</span>
+            <span><i class="dot current"></i> 建议学习</span>
+            <span><i class="dot locked"></i> 待解锁</span>
+          </div>
+        </div>
+        <div class="path-grid" id="lessonCards"></div>
+      </div>
+    </section>
+
+    <section class="section" id="graduation">
+      <div class="section-head">
+        <div>
+          <h2>毕业成果展示</h2>
+        </div>
+        <p>结营时，不是展示“学会了多少功能”，而是展示“AI 已经怎样进入真实工作”。</p>
+      </div>
+      <div class="result-grid">
+        <div class="result-card-block">
+          <h3>最终展示方式</h3>
+          <p>
+            每位学员建议用一个真实场景做毕业展示。展示内容可以脱敏，但必须来自真实业务。重点是让大家看到：
+            AI 如何理解背景、整理信息、辅助分析、帮助形成最终成果。
+          </p>
+          <div class="result-mini-grid">
+            <div class="mini-result">
+              <strong>目标一</strong>
+              <span>展示 AI 如何做背景整理、信息提炼、风险提醒与辅助判断。</span>
+            </div>
+            <div class="mini-result">
+              <strong>目标二</strong>
+              <span>展示 AI 如何看问题、做分析、形成结构化建议与展示成果。</span>
+            </div>
+            <div class="mini-result">
+              <strong>统一成果形式</strong>
+              <span>至少包含 1 个真实案例、1 套高频提示词、1 份可展示成果页面或提纲。</span>
+            </div>
+            <div class="mini-result">
+              <strong>课程最终价值</strong>
+              <span>形成一套可持续使用的方法，而不是一次性工具体验。</span>
+            </div>
+          </div>
+        </div>
+        <div class="result-card-block">
+          <h3>毕业展示建议结构</h3>
+          <ul>
+            <li>我原来遇到的工作问题是什么</li>
+            <li>我在哪个场景开始使用 WorkBuddy</li>
+            <li>我在哪个场景开始使用 Codex</li>
+            <li>AI 帮我节省了哪些动作</li>
+            <li>最终形成了什么成果</li>
+            <li>接下来我还希望把哪些经验沉淀成个人助手</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="lesson-stage" id="lessonStage" aria-live="polite">
+    <div class="lesson-stage-shell">
+      <div class="lesson-stage-header">
+        <div>
+          <div class="lesson-stage-kicker" id="lessonKicker">Lesson</div>
+          <h2 id="lessonTitle"></h2>
+          <p id="lessonIntro"></p>
+        </div>
+        <div class="lesson-stage-head-actions">
+          <button class="ghost-btn" type="button" id="backToHome">返回学习主页</button>
+          <button class="ghost-btn" type="button" id="markLessonComplete">标记本课完成</button>
+        </div>
+      </div>
+
+      <div class="lesson-stage-body">
+        <aside class="deck-sidebar">
+          <h3>课件目录</h3>
+          <p>每页只讲一个重点，按照上课节奏逐页推进，避免内容堆在一屏里。</p>
+          <div class="deck-list" id="deckList"></div>
+        </aside>
+
+        <div class="lesson-canvas">
+          <div id="slideCanvas"></div>
+        </div>
+      </div>
+
+      <div class="lesson-stage-footer">
+        <div class="lesson-stage-progress" id="lessonProgress"></div>
+        <div class="lesson-stage-actions">
+          <button class="nav-btn secondary" type="button" id="prevSlide">上一页</button>
+          <button class="nav-btn primary" type="button" id="nextSlide">下一页</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="lessonModal" aria-hidden="true">
+    <div class="modal-shell" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <div class="modal-kicker" id="modalKicker">Lesson</div>
+          <h2 id="modalTitle"></h2>
+          <p id="modalIntro"></p>
+        </div>
+        <button class="close-btn" type="button" id="closeModal" aria-label="关闭课件">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const lessons = [
+      {
+        id: 1,
+        title: "第1课｜认识两种工具与第一批使用场景",
+        shortTitle: "认识工具与场景",
+        theme: "先知道 WorkBuddy 和 Codex 各自适合做什么",
+        intro: "第一课不是上来教很多功能，而是先帮两位领导建立最基础的判断：什么任务适合交给 WorkBuddy，什么任务适合交给 Codex。只有工具定位清楚，后面才不会乱用、误用，或者觉得 AI 没价值。",
+        overview: "目标：让学员知道两种工具的基本定位，并完成第一次最简单的 AI 任务交付。",
+        tags: ["工具定位", "第一次上手", "场景判断"],
+        objectives: [
+          "理解 WorkBuddy 与 Codex 的定位差异。",
+          "知道管理者最先适合交给 AI 的任务类型。",
+          "完成第一次最简单的真实工作任务。"
+        ],
+        preClass: [
+          "讲师准备 1 份会议纪要或工作说明，作为统一演示材料。",
+          "学员带 1 份本周真实材料，最好是会议纪要、材料摘要或沟通记录。",
+          "讲师统一说明：本课程重点是工作场景，不是功能百科。"
+        ],
+        agenda: [
+          ["10分钟", "开场：说明 6 节课的目标和学习节奏，降低学员对 AI 的技术焦虑。"],
+          ["10分钟", "讲工具定位：WorkBuddy 适合快、轻、日常工作动作；Codex 适合做完整成果、页面和展示。"],
+          ["10分钟", "讲场景判断：哪些任务先交给 WorkBuddy，哪些任务后续可以请 Codex 介入。"],
+          ["20分钟", "统一演示：用 WorkBuddy 完成一次会议纪要整理，再展示 Codex 可以把成果进一步做成更完整输出。"],
+          ["10分钟", "学员实操：各自用自己的材料完成一次任务。"]
+        ],
+        slidePlan: [
+          {
+            title: "这 6 节课到底学什么",
+            purpose: "先统一预期，不让学员误以为是功能培训。",
+            bullets: [
+              "不是学习很多 AI 概念，而是学习怎样在工作里用得上。",
+              "不是学复杂技术，而是学会把真实任务交给 AI 处理第一轮。",
+              "最终目标是形成自己的 AI 使用方法。"
+            ]
+          },
+          {
+            title: "WorkBuddy 和 Codex 的分工",
+            purpose: "建立工具定位。",
+            bullets: [
+              "WorkBuddy：适合快、轻、日常、高频动作。",
+              "Codex：适合更完整的成果、页面、展示和结构化输出。",
+              "先用 WorkBuddy 提炼，再用 Codex 包装成果，是最自然的组合。"
+            ]
+          },
+          {
+            title: "管理者最先可以交给 AI 的任务",
+            purpose: "帮助学员快速找到切入点。",
+            bullets: [
+              "会议纪要整理",
+              "材料摘要提炼",
+              "待办事项提取",
+              "沟通提纲与一页领导摘要"
+            ]
+          },
+          {
+            title: "统一演示：第一次真实上手",
+            purpose: "让学员看到最简单的工作闭环。",
+            bullets: [
+              "先用 WorkBuddy 处理会议纪要。",
+              "让 AI 输出摘要、待办、风险提醒。",
+              "再说明：如果想把结果做成展示成果，可以再用 Codex。"
+            ]
+          },
+          {
+            title: "本课作业",
+            purpose: "让学员带着真实任务离开。",
+            bullets: [
+              "每人找一个本周真实任务再做一次。",
+              "保留输入材料、提示词和结果。",
+              "写一句复盘：这个任务适不适合交给 WorkBuddy。"
+            ]
+          }
+        ],
+        demoScenario: {
+          title: "统一案例：会议纪要整理",
+          steps: [
+            "把会议纪要贴给 WorkBuddy。",
+            "要求输出：背景摘要、待办事项、风险提醒。",
+            "提醒学员注意：这就是最典型的高频轻任务。",
+            "补一句：如果需要把它做成更正式的一页成果，后续可以交给 Codex。"
+          ]
+        },
+        promptTemplate: `请帮我处理一份会议纪要。\n输出要求：\n1. 用 5 句话以内说明会议背景和核心结论；\n2. 提取待办事项，按“事项/责任人/时间点”列出；\n3. 单独列出需要关注的风险或未决问题；\n4. 语言简洁，不要空话。\n原始材料如下：\n【粘贴材料】`,
+        mistakes: [
+          "一开始就想学很多高级功能，反而没有真正开始用。",
+          "不区分工具定位，所有任务都乱丢给一个工具。",
+          "没有用真实任务试，课堂上听懂了，回到工作里不会用。"
+        ],
+        homework: [
+          "找 1 个本周真实任务，用 WorkBuddy 做第一轮处理。",
+          "提交：原始材料、提示词、AI 结果、人工修改结果。",
+          "补一句：这个任务未来还需要 Codex 参与吗，为什么。"
+        ],
+        standards: [
+          "能说清 WorkBuddy 和 Codex 的区别。",
+          "能完成一次真实工作任务。",
+          "能判断这个任务适不适合 AI 介入。"
+        ],
+        takeaway: "第一课的成果不是学会功能，而是建立工具分工意识。"
+      },
+      {
+        id: 2,
+        title: "第2课｜用 WorkBuddy 做内容整理与起草",
+        shortTitle: "WorkBuddy 做内容",
+        theme: "先把日常材料交给 WorkBuddy 做第一轮",
+        intro: "第二课开始，聚焦 WorkBuddy 的第一个高价值场景：内容整理与起草。对管理者来说，很多工作并不难，但起草和整理很耗时间。WorkBuddy 在这里的价值，是帮助他们快速形成第一版，而不是从头开始写。",
+        overview: "目标：学员能用 WorkBuddy 起草邮件、摘要、提纲、汇报初稿等内容。",
+        tags: ["内容起草", "邮件", "摘要"],
+        objectives: [
+          "知道怎样让 WorkBuddy 输出更接近工作成果。",
+          "掌握受众、语气、结构、篇幅四要素。",
+          "完成一份可直接修改的工作初稿。"
+        ],
+        preClass: [
+          "讲师准备统一材料：可选对外邮件、会议背景 briefing 或内部汇报摘要。",
+          "学员准备 1 个需要自己起草的真实内容任务。",
+          "讲师提前准备好“差提示词”和“优化提示词”各一版。"
+        ],
+        agenda: [
+          ["10分钟", "复盘第一课：大家都在哪些任务里试用了 WorkBuddy。"],
+          ["10分钟", "讲原则：AI 不是替你写完，而是先帮你完成最难的一步。"],
+          ["10分钟", "讲方法：受众、语气、结构、篇幅四要素。"],
+          ["20分钟", "统一演示：用 WorkBuddy 起草一份工作材料，并做两轮优化。"],
+          ["10分钟", "学员实操：各自完成 1 份可修改的内容初稿。"]
+        ],
+        slidePlan: [
+          {
+            title: "为什么管理者最容易从内容起草场景开始",
+            purpose: "让学员感受到价值。",
+            bullets: [
+              "很多内容不难，但起稿最耗时间。",
+              "AI 最适合先完成第一版结构和文字框架。",
+              "管理者保留最终判断和风格把关即可。"
+            ]
+          },
+          {
+            title: "WorkBuddy 内容输出四要素",
+            purpose: "建立最核心方法。",
+            bullets: [
+              "写给谁看",
+              "希望是什么语气",
+              "要长成什么结构",
+              "篇幅控制到什么程度"
+            ]
+          },
+          {
+            title: "内容起草的常见场景",
+            purpose: "帮助学员对应自己的工作。",
+            bullets: [
+              "对外邮件",
+              "会议背景摘要",
+              "部门汇报摘要",
+              "管理层沟通提纲"
+            ]
+          },
+          {
+            title: "统一演示：一份内容如何从 0 到 1",
+            purpose: "展示优化过程。",
+            bullets: [
+              "第一轮：先出结构完整版本。",
+              "第二轮：压缩空话、调整语气。",
+              "第三轮：补上管理者本人判断。"
+            ]
+          },
+          {
+            title: "本课作业",
+            purpose: "把方法带回真实工作。",
+            bullets: [
+              "每人完成 1 份真实内容初稿。",
+              "至少做 2 轮修改。",
+              "说明自己主要改了哪里。"
+            ]
+          }
+        ],
+        demoScenario: {
+          title: "统一案例：会议背景摘要 / 管理层汇报摘要",
+          steps: [
+            "给 WorkBuddy 一份长材料。",
+            "明确阅读对象：管理层。",
+            "要求输出：标题、背景、关键点、建议动作。",
+            "第二轮要求：压缩空话，控制在 400-600 字。"
+          ]
+        },
+        promptTemplate: `请作为我的内容起草助手。\n阅读对象：管理层。\n任务：请根据下面材料，帮我起草一份工作摘要初稿。\n输出要求：\n1. 先给标题；\n2. 内容结构按“背景-关键点-建议动作”；\n3. 语言简洁、正式、少空话；\n4. 控制在 400-600 字。\n材料如下：\n【粘贴材料】`,
+        mistakes: [
+          "没有说明写给谁看，导致结果太泛。",
+          "没有规定结构，导致输出散乱。",
+          "把 AI 第1版直接当成最终版。"
+        ],
+        homework: [
+          "找 1 个本周要起草的真实任务，用 WorkBuddy 出第一版。",
+          "至少做 2 轮优化：结构一轮，语言一轮。",
+          "提交最终版，并写一句：如果没有 AI，这份材料你原本会花多久。"
+        ],
+        standards: [
+          "结果必须更像工作成果，而不是聊天回答。",
+          "能体现受众和语气差异。",
+          "学员能明显感受到起稿成本下降。"
+        ],
+        takeaway: "第二课要让学员第一次明确感受到：AI 已经开始替自己节省时间。"
+      },
+      {
+        id: 3,
+        title: "第3课｜用 WorkBuddy 做问题分析与决策辅助",
+        shortTitle: "WorkBuddy 做分析",
+        theme: "让 WorkBuddy 从写内容走向看问题",
+        intro: "第三课把 WorkBuddy 从内容助手推进到分析助手。对两位领导来说，这一课尤其关键：A 更需要风险提醒和相关方判断，B 更需要问题分析和策略思考。虽然课件统一，但练习时各自带入自己的业务材料。",
+        overview: "目标：学员能让 WorkBuddy 做多角度分析，而不只是写一段总结。",
+        tags: ["问题分析", "风险提醒", "决策辅助"],
+        objectives: [
+          "知道如何要求 WorkBuddy 从多个角度分析问题。",
+          "学会区分事实、判断、假设、建议。",
+          "形成一份贴近本人业务的分析结果。"
+        ],
+        preClass: [
+          "讲师准备一个统一问题案例，例如项目推进困难、合作推进迟缓、数据异常。",
+          "A 领导带与政务/中东事务相关的问题材料。",
+          "B 领导带与业务判断、数据或策略相关的问题材料。"
+        ],
+        agenda: [
+          ["10分钟", "复盘第二课：哪些内容起草场景最省时间。"],
+          ["10分钟", "讲为什么管理者更需要分析而不是单纯写作。"],
+          ["10分钟", "讲方法：事实、判断、假设、建议四类输出。"],
+          ["20分钟", "统一演示：让 WorkBuddy 从多个角度分析一个问题。"],
+          ["10分钟", "学员练习：A 和 B 各自代入真实问题，形成分析结果。"]
+        ],
+        slidePlan: [
+          {
+            title: "AI 在分析场景下为什么更有价值",
+            purpose: "帮助学员理解价值升级。",
+            bullets: [
+              "写作只是替你节省时间，分析可以帮助你补视角。",
+              "管理者很多时候不缺资料，缺的是结构化判断。",
+              "AI 可以帮助更快看清问题。"
+            ]
+          },
+          {
+            title: "四类输出要分开",
+            purpose: "建立分析纪律。",
+            bullets: [
+              "事实：已知和可验证内容",
+              "判断：基于事实的解释",
+              "假设：尚未确认但值得关注",
+              "建议：下一步动作"
+            ]
+          },
+          {
+            title: "同一课，两个业务场景怎么用",
+            purpose: "统一授课下的个性化代入。",
+            bullets: [
+              "领导 A：相关方、文化、风险、长期关系。",
+              "领导 B：数据、客户、团队、策略、市场。",
+              "讲师讲同一方法，学员带入不同材料。"
+            ]
+          },
+          {
+            title: "统一演示：多角度分析",
+            purpose: "展示如何从一个问题拆出多个视角。",
+            bullets: [
+              "先给问题背景。",
+              "要求从 4 个角度分析。",
+              "最后要求 WorkBuddy 说出需要领导判断什么。"
+            ]
+          },
+          {
+            title: "本课作业",
+            purpose: "带回真实问题继续练。",
+            bullets: [
+              "每人交 1 份真实分析结果。",
+              "至少从 4 个角度拆问题。",
+              "写一句：AI 提醒了我什么本来没想到的点。"
+            ]
+          }
+        ],
+        demoScenario: {
+          title: "统一案例：一个推进不顺的问题，如何拆出多个视角",
+          steps: [
+            "把问题背景交给 WorkBuddy。",
+            "要求从目标、相关方、资源、风险四个角度分析。",
+            "要求区分事实和判断。",
+            "最后列出需要领导判断的关键问题。"
+          ]
+        },
+        promptTemplate: `请作为我的分析助手，而不是内容写手。\n下面是一个工作问题，请从以下角度分析：\n1. 目标\n2. 相关方\n3. 资源\n4. 风险\n输出要求：\n- 每个角度都区分“事实 / 判断 / 假设 / 建议”；\n- 不要只给结论；\n- 最后列出“仍需领导判断的 3 个问题”。\n材料如下：\n【粘贴材料】`,
+        mistakes: [
+          "只让 AI 给结论，不要求它说明依据。",
+          "没有角度，输出仍是一段普通总结。",
+          "学员没有继续追问‘接下来我该判断什么’。"
+        ],
+        homework: [
+          "每人找 1 个真实问题，用 WorkBuddy 做多角度分析。",
+          "提交分析结果，并单独列出 3 个仍需本人判断的问题。",
+          "说明：这个分析场景对你是否有帮助。"
+        ],
+        standards: [
+          "结果必须是分析，不是摘要。",
+          "能看出多角度结构。",
+          "最后能回到管理动作：要判断什么。"
+        ],
+        takeaway: "第三课的关键，不是让 AI 替你下结论，而是让 AI 帮你看得更完整。"
+      },
+      {
+        id: 4,
+        title: "第4课｜用 Codex 把结果做成展示成果",
+        shortTitle: "Codex 做成果",
+        theme: "把 WorkBuddy 的结果进一步做成页面、汇报结构或展示物",
+        intro: "第四课开始切到 Codex。对管理者来说，Codex 的价值不在于写代码，而在于把已经整理和分析过的结果，进一步做成更完整、更像成果的展示页面或结构化输出。这样 AI 才真正开始进入‘成果层’。",
+        overview: "目标：学员理解 Codex 不是另一个聊天框，而是更适合做成果化输出。",
+        tags: ["Codex", "展示页面", "成果化"],
+        objectives: [
+          "理解 Codex 与 WorkBuddy 的不同定位。",
+          "知道什么样的任务适合交给 Codex。",
+          "完成一次“分析结果 → 展示成果”的转化。"
+        ],
+        preClass: [
+          "讲师准备一份第三课分析结果，作为统一输入材料。",
+          "学员带上自己前几课做过的摘要或分析结果。",
+          "讲师提前准备一个简单可展示的结果样式示例。"
+        ],
+        agenda: [
+          ["10分钟", "复盘第三课：有哪些分析结果已经值得拿去汇报。"],
+          ["10分钟", "讲工具切换：为什么这类成果可以请 Codex 介入。"],
+          ["10分钟", "讲场景：Codex 更适合做一页成果、页面和展示结构。"],
+          ["20分钟", "统一演示：把一份分析结果变成一页展示型成果。"],
+          ["10分钟", "学员思考：自己的哪类任务未来可以这样做。"]
+        ],
+        slidePlan: [
+          {
+            title: "为什么要从 WorkBuddy 过渡到 Codex",
+            purpose: "帮助学员理解两工具衔接。",
+            bullets: [
+              "WorkBuddy 适合做快处理和轻分析。",
+              "Codex 适合把内容做成更完整成果。",
+              "一个负责加工，一个负责成品化。"
+            ]
+          },
+          {
+            title: "哪些任务适合交给 Codex",
+            purpose: "建立判断标准。",
+            bullets: [
+              "一页展示成果",
+              "专题页面",
+              "更完整的汇报结构",
+              "适合展示和沉淀的页面成果"
+            ]
+          },
+          {
+            title: "统一演示：结果如何被做成成果",
+            purpose: "展示 Codex 的实际价值。",
+            bullets: [
+              "输入是一份已经整理好的分析材料。",
+              "输出是一页更清晰、更可展示的成果。",
+              "让学员感受到：AI 不只是在聊天，还能做成品。"
+            ]
+          },
+          {
+            title: "两位领导分别会在哪些场景用到",
+            purpose: "建立个人代入感。",
+            bullets: [
+              "领导 A：会议准备页、事项判断页、风险提示页。",
+              "领导 B：分析页、策略页、汇报页、PPT 结构页。"
+            ]
+          },
+          {
+            title: "本课作业",
+            purpose: "帮助学员开始思考成果化输出。",
+            bullets: [
+              "从自己的历史案例里，选 1 个最值得做成果的场景。",
+              "说明它为什么适合请 Codex 帮忙。",
+              "准备下一课串联工作流。"
+            ]
+          }
+        ],
+        demoScenario: {
+          title: "统一案例：把分析结果做成一页成果",
+          steps: [
+            "先准备一份 WorkBuddy 已经整理好的分析结果。",
+            "请 Codex 帮忙把它变成更完整的一页成果。",
+            "强调：重点不是代码，而是更好的展示结构。",
+            "让学员看到最终成果更适合汇报和展示。"
+          ]
+        },
+        promptTemplate: `我已经有一份分析结果，请帮我把它整理成一页展示型成果。\n要求：\n1. 给出清晰标题；\n2. 先结论，后依据；\n3. 单独列出风险提醒；\n4. 单独列出建议动作；\n5. 结果适合管理层快速阅读。\n原始内容如下：\n【粘贴内容】`,
+        mistakes: [
+          "把 Codex 也只当作普通聊天工具。",
+          "没有经过前面的整理和分析，就直接想做成果。",
+          "只追求形式，没有明确内容结构。"
+        ],
+        homework: [
+          "从自己的案例中找 1 个最适合做成成果的场景。",
+          "说明这个场景为什么适合交给 Codex。",
+          "带着这份材料进入下一课串联练习。"
+        ],
+        standards: [
+          "学员能说清 WorkBuddy 与 Codex 的衔接关系。",
+          "能识别哪些内容值得做成果化处理。",
+          "开始建立‘先处理、后成品化’的工作流意识。"
+        ],
+        takeaway: "第四课的价值，是让学员第一次明确看到 Codex 在成果层的作用。"
+      },
+      {
+        id: 5,
+        title: "第5课｜把 WorkBuddy 和 Codex 串成一个完整工作流",
+        shortTitle: "串联完整工作流",
+        theme: "从输入材料到最终成果，形成一条完整的 AI 工作链",
+        intro: "第五课是最接近真实工作的一课。前面几节课已经分别认识了 WorkBuddy 和 Codex，这一课要把两者串起来，让学员看到：一个真实工作任务，怎样从材料输入、初步整理、问题分析，一直走到成果展示。",
+        overview: "目标：形成 WorkBuddy → Codex 的完整使用路径。",
+        tags: ["完整流程", "联动使用", "真实场景"],
+        objectives: [
+          "知道如何把两种工具串联成一条工作链。",
+          "理解一个真实任务如何逐步加工。",
+          "完成一次完整任务流程演练。"
+        ],
+        preClass: [
+          "讲师准备一个完整真实场景，最好能同时兼顾两位领导的理解。",
+          "学员准备一个稍完整的工作任务，而不是单一材料。",
+          "讲师提前设计流程图：输入材料 → WorkBuddy → Codex → 最终成果。"
+        ],
+        agenda: [
+          ["10分钟", "复盘第四课：哪些内容最值得进一步做成果。"],
+          ["10分钟", "讲工作流思维：为什么单一问答无法支撑完整工作。"],
+          ["10分钟", "讲串联逻辑：WorkBuddy 负责整理、起草、分析；Codex 负责成果和展示。"],
+          ["20分钟", "统一演示：完成一次从输入到成果的完整案例。"],
+          ["10分钟", "学员练习：各自尝试梳理自己的工作流。"]
+        ],
+        slidePlan: [
+          {
+            title: "为什么一定要学会串联",
+            purpose: "帮助学员看见价值升级。",
+            bullets: [
+              "单点使用只是体验，串联使用才会形成真正的方法。",
+              "真实工作不是一次问答，而是一系列加工动作。",
+              "串联起来后，AI 才开始像真正的助手。"
+            ]
+          },
+          {
+            title: "完整工作流长什么样",
+            purpose: "给出统一框架。",
+            bullets: [
+              "原始材料输入",
+              "WorkBuddy 先整理和提炼",
+              "WorkBuddy 再做分析或初稿",
+              "Codex 把结果做成可展示成果"
+            ]
+          },
+          {
+            title: "同一条流程，不同领导如何代入",
+            purpose: "强化场景代入。",
+            bullets: [
+              "领导 A：事项背景 → 风险提醒 → 会议准备页",
+              "领导 B：数据/问题 → 策略分析 → 汇报页/PPT页"
+            ]
+          },
+          {
+            title: "统一演示：一条完整案例",
+            purpose: "让学员看到端到端效果。",
+            bullets: [
+              "先处理原始材料",
+              "再形成分析或内容",
+              "最后生成成果页"
+            ]
+          },
+          {
+            title: "本课作业",
+            purpose: "鼓励学员把自己的流程走通一次。",
+            bullets: [
+              "每人选一个完整任务",
+              "写出每一步分别由哪个工具承担",
+              "标记其中最有价值的一步"
+            ]
+          }
+        ],
+        demoScenario: {
+          title: "统一案例：一份工作任务怎样从原始材料走到最终成果",
+          steps: [
+            "输入原始材料给 WorkBuddy。",
+            "让 WorkBuddy 做摘要、提炼、分析。",
+            "把已加工结果交给 Codex 做成果展示。",
+            "回头复盘：哪个环节最节省时间。"
+          ]
+        },
+        promptTemplate: `现在我要完成一个完整工作任务，请按以下工作流协助我：\n第一步：先根据原始材料做摘要与要点提炼；\n第二步：根据提炼结果做分析/起草；\n第三步：告诉我哪些结果适合进一步做成展示成果。\n原始材料如下：\n【粘贴材料】`,
+        mistakes: [
+          "只会单点使用工具，不知道怎样串联。",
+          "明明还没有整理清楚，就急着做最终成果。",
+          "没有复盘每一步的价值。"
+        ],
+        homework: [
+          "选 1 个完整工作任务，分别写出 WorkBuddy 和 Codex 在其中的分工。",
+          "走通一次从输入到成果的完整过程。",
+          "写一句：这条工作流里最有价值的一步是什么。"
+        ],
+        standards: [
+          "能说清每一步为什么用这个工具。",
+          "能完成一次端到端流程。",
+          "开始形成自己的使用习惯。"
+        ],
+        takeaway: "第五课要让学员意识到：AI 真正好用的时候，不是单点使用，而是形成一条稳定工作流。"
+      },
+      {
+        id: 6,
+        title: "第6课｜毕业展示与个人助手雏形",
+        shortTitle: "毕业展示与助手雏形",
+        theme: "把 6 节课积累的经验收口成自己的 AI 使用方法",
+        intro: "最后一课不是继续讲新工具，而是做收口。学员需要把前面 5 节课的真实案例、提示词、成果样板整理出来，形成自己的毕业展示。同时开始明确：未来如果进一步体验 Agent 产品，自己最希望沉淀什么。",
+        overview: "目标：形成毕业展示结构，并初步建立个人助手雏形。",
+        tags: ["毕业展示", "个人助手", "收口总结"],
+        objectives: [
+          "完成个人毕业展示思路。",
+          "梳理过去 5 节课中最有价值的案例和模板。",
+          "初步明确未来个人助手雏形。"
+        ],
+        preClass: [
+          "讲师提醒学员带上前五课中最好的 1-2 个案例。",
+          "学员准备自己最常用的一类场景模板。",
+          "讲师准备统一的毕业展示结构模板。"
+        ],
+        agenda: [
+          ["10分钟", "回顾前 5 课：各节课分别解决了什么问题。"],
+          ["10分钟", "讲毕业展示：展示什么，怎么讲，重点看什么。"],
+          ["10分钟", "讲未来助手雏形：为什么真实案例和模板就是最好的沉淀材料。"],
+          ["20分钟", "学员整理：自己的最佳案例、最佳提示词、最佳成果样板。"],
+          ["10分钟", "结营收口：说清下一步如何持续用。"]
+        ],
+        slidePlan: [
+          {
+            title: "这 6 节课到底留下了什么",
+            purpose: "帮助学员回顾成长路径。",
+            bullets: [
+              "认识工具定位",
+              "会做内容起草",
+              "会做问题分析",
+              "会做成果化展示",
+              "会串联完整工作流"
+            ]
+          },
+          {
+            title: "毕业展示不是秀功能",
+            purpose: "统一展示标准。",
+            bullets: [
+              "重点展示 AI 如何进入真实工作。",
+              "重点展示前后对比，而不是参数细节。",
+              "重点展示你留下了什么方法。"
+            ]
+          },
+          {
+            title: "统一毕业展示结构",
+            purpose: "让学员容易准备。",
+            bullets: [
+              "我原来的问题是什么",
+              "我先在哪些场景用 WorkBuddy",
+              "我再在哪些场景请 Codex 介入",
+              "我最终形成了什么成果"
+            ]
+          },
+          {
+            title: "个人助手雏形从哪里来",
+            purpose: "轻轻引入下一阶段可能性。",
+            bullets: [
+              "高频任务模板",
+              "最佳提示词",
+              "历史案例",
+              "成果样板",
+              "风险偏好与表达习惯"
+            ]
+          },
+          {
+            title: "课程结营与下一步",
+            purpose: "让学员把方法继续带回工作。",
+            bullets: [
+              "继续用 WorkBuddy 处理高频任务",
+              "继续用 Codex 做成果层输出",
+              "逐步沉淀自己的固定模板"
+            ]
+          }
+        ],
+        demoScenario: {
+          title: "统一案例：怎样讲一个毕业展示",
+          steps: [
+            "先讲原始工作问题。",
+            "再讲 AI 如何介入。",
+            "再讲用了 WorkBuddy 和 Codex 各做了什么。",
+            "最后讲自己最想长期保留的方法。"
+          ]
+        },
+        promptTemplate: `请帮我整理一份毕业展示提纲。\n要求按以下结构输出：\n1. 我的工作问题；\n2. 我在哪些场景开始使用 WorkBuddy；\n3. 我在哪些场景开始使用 Codex；\n4. AI 帮我节省了哪些动作；\n5. 最终形成了什么成果；\n6. 我希望后续继续沉淀什么。\n下面是我的学习过程和案例：\n【粘贴内容】`,
+        mistakes: [
+          "毕业展示只讲工具功能，不讲真实工作变化。",
+          "没有保留过程材料，导致最后无内容可讲。",
+          "没有沉淀模板，课程结束后又回到原来状态。"
+        ],
+        homework: [
+          "整理自己的毕业展示提纲。",
+          "选 1-2 个最有代表性的真实案例。",
+          "列出未来最希望继续沉淀的任务模板。"
+        ],
+        standards: [
+          "展示必须基于真实业务案例。",
+          "能看出 WorkBuddy 与 Codex 的分工。",
+          "能说明课程结束后准备怎样继续使用。"
+        ],
+        takeaway: "第六课的重点不是结束，而是让学员知道：这套方法已经可以继续在工作里长期生长。"
+      }
+    ];
+
+    const storageKey = "leader-ai-course-open-count";
+    const modal = document.getElementById("lessonModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalIntro = document.getElementById("modalIntro");
+    const modalKicker = document.getElementById("modalKicker");
+    const modalBody = document.getElementById("modalBody");
+    const lessonCards = document.getElementById("lessonCards");
+
+    function getUnlockedCount() {
+      const saved = Number(localStorage.getItem(storageKey));
+      if (!saved || saved < 1) return 1;
+      return Math.min(saved, lessons.length);
+    }
+
+    function setUnlockedCount(value) {
+      localStorage.setItem(storageKey, String(Math.max(1, Math.min(value, lessons.length))));
+      renderCards();
+    }
+
+    function completeLesson(id) {
+      const unlocked = getUnlockedCount();
+      if (id > unlocked) return;
+      if (id < lessons.length && unlocked < id + 1) {
+        setUnlockedCount(id + 1);
+      } else {
+        renderCards();
+      }
+    }
+
+    function listHtml(items) {
+      return `<ul>${items.map(item => `<li>${item}</li>`).join("")}</ul>`;
+    }
+
+    function agendaHtml(items) {
+      return items.map(item => `
+        <div class="agenda-item">
+          <div class="mark">${item[0].replace("分钟", "")}</div>
+          <div>
+            <div class="label">${item[0]}</div>
+            <div class="sub">${item[1]}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function slidesHtml(slides) {
+      return slides.map((slide, index) => `
+        <div class="slide-card">
+          <div class="slide-top">
+            <div class="slide-title">${slide.title}</div>
+            <div class="slide-no">PPT ${index + 1}</div>
+          </div>
+          <p>${slide.purpose}</p>
+          ${listHtml(slide.bullets)}
+        </div>
+      `).join("");
+    }
+
+    function buildLessonMarkup(lesson) {
+      const isLast = lesson.id === lessons.length;
+      const nextText = isLast ? "返回学习路径" : `继续看第${lesson.id + 1}课`;
+
+      return `
+        <div class="lesson-layout">
+          <div class="lesson-column">
+            <section class="paper">
+              <h3>本课目标</h3>
+              <p>${lesson.overview}</p>
+              <div class="theme-banner"><strong>本课主题：</strong>${lesson.theme}</div>
+              <div class="mini-grid">
+                <div class="mini-card">
+                  <strong>学习目标</strong>
+                  ${listHtml(lesson.objectives)}
+                </div>
+                <div class="mini-card">
+                  <strong>课前准备</strong>
+                  ${listHtml(lesson.preClass)}
+                </div>
+              </div>
+            </section>
+
+            <section class="paper">
+              <h3>60分钟授课流程</h3>
+              <div class="agenda">${agendaHtml(lesson.agenda)}</div>
+            </section>
+
+            <section class="paper">
+              <h3>${lesson.demoScenario.title}</h3>
+              <div class="case-card">
+                <strong>演示步骤</strong>
+                ${listHtml(lesson.demoScenario.steps)}
+              </div>
+              <div class="teacher-box"><strong>课堂提醒：</strong>这节课重点是场景代入和方法体验，不是功能介绍大全。讲师只需要把统一案例讲透，再让两位学员带入自己的真实材料。</div>
+            </section>
+          </div>
+
+          <div class="lesson-column">
+            <section class="paper">
+              <h3>逐页PPT讲稿结构</h3>
+              <div class="slides">${slidesHtml(lesson.slidePlan)}</div>
+            </section>
+
+            <section class="paper">
+              <h3>课堂提示词模板</h3>
+              <div class="prompt-card">
+                <strong>建议现场演示版本</strong>
+                <pre>${lesson.promptTemplate}</pre>
+              </div>
+            </section>
+
+            <section class="paper">
+              <h3>常见误区与课后作业</h3>
+              <div class="mini-grid">
+                <div class="mistake-card">
+                  <strong>常见误区</strong>
+                  ${listHtml(lesson.mistakes)}
+                </div>
+                <div class="mini-card">
+                  <strong>课后作业</strong>
+                  ${listHtml(lesson.homework)}
+                </div>
+              </div>
+              <div class="homework-box">
+                <strong>完成标准</strong>
+                ${listHtml(lesson.standards)}
+              </div>
+              <div class="theme-banner"><strong>本课收口：</strong>${lesson.takeaway}</div>
+              <div class="footer-actions">
+                <button class="paper-btn complete" type="button" data-modal-complete="${lesson.id}">标记本课完成</button>
+                <button class="paper-btn next" type="button" data-modal-next="${lesson.id}">${nextText}</button>
+              </div>
+              <div class="tiny-note">建议每节课结束后，保留真实案例、提示词和最终成果，这些会直接成为毕业展示素材。</div>
+            </section>
+          </div>
+        </div>
+      `;
+    }
+
+    function openLesson(id) {
+      const unlocked = getUnlockedCount();
+      if (id > unlocked) return;
+      const lesson = lessons.find(item => item.id === id);
+      if (!lesson) return;
+      modalKicker.textContent = `Lesson ${lesson.id} · WorkBuddy × Codex`;
+      modalTitle.textContent = lesson.title;
+      modalIntro.textContent = lesson.intro;
+      modalBody.innerHTML = buildLessonMarkup(lesson);
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      history.replaceState(null, "", `#lesson-${id}`);
+    }
+
+    function closeLesson() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("modal-open");
+      if (location.hash.startsWith("#lesson-")) {
+        history.replaceState(null, "", location.pathname);
+      }
+    }
+
+    function openLessonFromHash() {
+      const match = location.hash.match(/^#lesson-(\d)$/);
+      if (!match) return;
+      const lessonId = Number(match[1]);
+      if (lessonId >= 1 && lessonId <= lessons.length && lessonId <= getUnlockedCount()) {
+        openLesson(lessonId);
+      }
+    }
+
+    function renderCards() {
+      const unlocked = getUnlockedCount();
+      lessonCards.innerHTML = lessons.map(lesson => {
+        const locked = lesson.id > unlocked;
+        const current = lesson.id === unlocked;
+        const stateClass = locked ? "is-locked" : current ? "is-current" : "is-open";
+        const stateText = locked ? "待解锁" : current ? "建议先学" : "已解锁";
+        return `
+          <div class="path-card ${stateClass}">
+            <div>
+              <div class="path-status">${stateText}</div>
+              <div class="path-no">${String(lesson.id).padStart(2, "0")}</div>
+              <h3>${lesson.shortTitle}</h3>
+              <div class="path-theme">${lesson.theme}</div>
+              <p>${lesson.overview}</p>
+              <div class="tag-row">
+                ${lesson.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+              </div>
+            </div>
+            <button class="open-btn" type="button" data-open="${lesson.id}" ${locked ? "disabled style='opacity:.45;cursor:not-allowed'" : ""}>
+              ${locked ? "待解锁" : "打开课件"}
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    document.addEventListener("click", event => {
+      const openTarget = event.target.closest("[data-open]");
+      const modalCompleteTarget = event.target.closest("[data-modal-complete]");
+      const modalNextTarget = event.target.closest("[data-modal-next]");
+
+      if (openTarget) {
+        openLesson(Number(openTarget.dataset.open));
+      }
+
+      if (modalCompleteTarget) {
+        completeLesson(Number(modalCompleteTarget.dataset.modalComplete));
+      }
+
+      if (modalNextTarget) {
+        const lessonId = Number(modalNextTarget.dataset.modalNext);
+        const nextId = lessonId + 1;
+        if (nextId > lessons.length) {
+          closeLesson();
+          document.getElementById("path").scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+        if (nextId <= getUnlockedCount()) {
+          openLesson(nextId);
+        } else {
+          closeLesson();
+        }
+      }
+
+      if (event.target === modal) {
+        closeLesson();
+      }
+    });
+
+    document.getElementById("closeModal").addEventListener("click", closeLesson);
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modal.classList.contains("open")) {
+        closeLesson();
+      }
+    });
+
+    renderCards();
+    openLessonFromHash();
+  </script>
+  <script>
+    (() => {
+      const homeView = document.getElementById("homeView");
+      const lessonStage = document.getElementById("lessonStage");
+      const lessonTitle = document.getElementById("lessonTitle");
+      const lessonIntro = document.getElementById("lessonIntro");
+      const lessonKicker = document.getElementById("lessonKicker");
+      const deckList = document.getElementById("deckList");
+      const slideCanvas = document.getElementById("slideCanvas");
+      const lessonProgress = document.getElementById("lessonProgress");
+      const lessonCards = document.getElementById("lessonCards");
+      const backToHome = document.getElementById("backToHome");
+      const markLessonCompleteButton = document.getElementById("markLessonComplete");
+      const prevSlideButton = document.getElementById("prevSlide");
+      const nextSlideButton = document.getElementById("nextSlide");
+      const modal = document.getElementById("lessonModal");
+      const storageKey = "leader-ai-course-open-count";
+      let activeLessonId = null;
+      let activeSlideIndex = 0;
+
+      if (modal) modal.style.display = "none";
+
+      function getUnlockedCount() {
+        const saved = Number(localStorage.getItem(storageKey));
+        if (!saved || saved < 1) return 1;
+        return Math.min(saved, lessons.length);
+      }
+
+      function setUnlockedCount(value) {
+        localStorage.setItem(storageKey, String(Math.max(1, Math.min(value, lessons.length))));
+        if (typeof renderCards === "function") renderCards();
+      }
+
+      function completeLesson(id) {
+        const unlocked = getUnlockedCount();
+        if (id > unlocked) return;
+        if (id < lessons.length && unlocked < id + 1) {
+          setUnlockedCount(id + 1);
+        } else if (typeof renderCards === "function") {
+          renderCards();
+        }
+      }
+
+      function renderCardsV2() {
+        const unlocked = getUnlockedCount();
+        lessonCards.innerHTML = lessons.map(lesson => {
+          const locked = lesson.id > unlocked;
+          const current = lesson.id === unlocked;
+          const stateClass = locked ? "is-locked" : current ? "is-current" : "is-open";
+          const stateText = locked ? "待解锁" : current ? "建议先学" : "已解锁";
+          return `
+            <div class="path-card ${stateClass}">
+              <div>
+                <div class="path-status">${stateText}</div>
+                <div class="path-no">${String(lesson.id).padStart(2, "0")}</div>
+                <h3>${lesson.shortTitle}</h3>
+                <div class="path-theme">${lesson.theme}</div>
+                <p>${lesson.overview}</p>
+                <div class="tag-row">
+                  ${lesson.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}
+                </div>
+              </div>
+              <button class="open-btn" type="button" data-open="${lesson.id}" ${locked ? "disabled style='opacity:.45;cursor:not-allowed'" : ""}>
+                ${locked ? "待解锁" : "打开课件"}
+              </button>
+            </div>
+          `;
+        }).join("");
+      }
+
+      window.renderCards = renderCardsV2;
+
+      function listHtml(items, ordered = false) {
+        const tag = ordered ? "ol" : "ul";
+        return `<${tag}>${(items || []).map(item => `<li>${item}</li>`).join("")}</${tag}>`;
+      }
+
+      function escapeHtml(text) {
+        return String(text)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;");
+      }
+
+      function buildDeckSlides(lesson) {
+        return [
+          {
+            label: "Cover",
+            title: lesson.title,
+            lead: lesson.intro,
+            note: "开场先讲清楚这节课为什么学，避免一上来就陷入工具细节。",
+            tags: lesson.tags,
+            blocks: [
+              { title: "本课主题", list: [lesson.theme] },
+              { title: "结果预期", list: [lesson.overview] }
+            ]
+          },
+          {
+            label: "Goals",
+            title: "这节课先建立什么判断",
+            lead: "先把边界、分工和判断标准讲清楚，再进入 WorkBuddy 和 Codex 的操作体验。",
+            note: "这一页是统一预期页，适合老师先讲，再让学员对号入座。",
+            blocks: [
+              { title: "学习目标", list: lesson.objectives },
+              { title: "课前准备", list: lesson.preClass }
+            ]
+          },
+          {
+            label: "Agenda",
+            title: "60分钟课堂节奏",
+            lead: "围绕一个真实场景推进，不讲散点功能，而是讲完整动作。",
+            note: "节奏建议保持轻，不求讲多，但求当堂能做出来。",
+            blocks: lesson.agenda.map(item => ({ title: item[0], text: item[1] }))
+          },
+          ...lesson.slidePlan.map((slide, index) => ({
+            label: `P${index + 1}`,
+            title: slide.title,
+            lead: slide.purpose,
+            note: "这一页是逐页 PPT 讲解页，可以边讲边演示。",
+            blocks: [
+              { title: "这一页要带走什么", list: slide.bullets }
+            ]
+          })),
+          {
+            label: "Demo",
+            title: lesson.demoScenario.title,
+            lead: "统一案例是课堂主线。工具不单独讲，而是在案例里顺着走。",
+            note: "建议直接贴真实材料演示，让学员看到 AI 是怎么一步步形成结果的。",
+            blocks: [
+              { title: "演示步骤", list: lesson.demoScenario.steps, ordered: true }
+            ]
+          },
+          {
+            label: "Prompt",
+            title: "现场可直接使用的话术模板",
+            lead: "第一次使用不要求自己从零写，先用能跑通的模板建立信心。",
+            note: "这一页适合老师现场复制演示，然后引导学员只改其中几个关键点。",
+            quote: lesson.promptTemplate,
+            blocks: []
+          },
+          {
+            label: "Action",
+            title: "课后动作与完成标准",
+            lead: "每节课要留下真实材料、提示词和中间成果，最后自然汇成毕业展示。",
+            note: lesson.takeaway,
+            blocks: [
+              { title: "课后作业", list: lesson.homework },
+              { title: "完成标准", list: lesson.standards }
+            ]
+          }
+        ];
+      }
+
+      function posterBlocksHtml(blocks) {
+        const normalized = blocks || [];
+        if (!normalized.length) return "";
+        const singleColumn = normalized.length === 1 ? " style='grid-template-columns:1fr'" : "";
+        return `
+          <div class="poster-grid"${singleColumn}>
+            ${normalized.map(block => `
+              <div class="poster-block">
+                <strong>${block.title}</strong>
+                ${block.list ? listHtml(block.list, Boolean(block.ordered)) : `<p>${block.text || ""}</p>`}
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      function renderSlide(lesson, slide, index, total) {
+        const tags = slide.tags && slide.tags.length ? slide.tags : lesson.tags;
+        slideCanvas.innerHTML = `
+          <article class="slide-poster">
+            <div class="poster-top">
+              <div class="poster-chip">${slide.label}</div>
+              <div class="poster-index">${index + 1} / ${total}</div>
+            </div>
+            <div class="poster-main">
+              <h3 class="poster-title">${slide.title}</h3>
+              <p class="poster-lead">${slide.lead}</p>
+              ${posterBlocksHtml(slide.blocks)}
+              ${slide.quote ? `<div class="poster-quote">${escapeHtml(slide.quote)}</div>` : ""}
+            </div>
+            <div class="poster-bottom">
+              <div class="poster-note">${slide.note || ""}</div>
+              <div class="poster-tags">${tags.map(tag => `<span>${tag}</span>`).join("")}</div>
+            </div>
+          </article>
+        `;
+      }
+
+      function renderDeck(lesson, slides, activeIndex) {
+        deckList.innerHTML = slides.map((slide, index) => `
+          <button class="deck-pill ${index === activeIndex ? "active" : ""}" type="button" data-slide-jump="${index}">
+            <small>${slide.label}</small>
+            <strong>${slide.title}</strong>
+          </button>
+        `).join("");
+        renderSlide(lesson, slides[activeIndex], activeIndex, slides.length);
+        lessonProgress.textContent = `第 ${lesson.id} 课 · 第 ${activeIndex + 1} 页 / 共 ${slides.length} 页`;
+      }
+
+      function currentLesson() {
+        return lessons.find(item => item.id === activeLessonId);
+      }
+
+      function updateHash(lessonId, slideIndex) {
+        history.replaceState(null, "", `#lesson-${lessonId}-${slideIndex + 1}`);
+      }
+
+      function openLessonDeck(id, slideIndex = 0) {
+        const unlocked = getUnlockedCount();
+        if (id > unlocked) return;
+        const lesson = lessons.find(item => item.id === id);
+        if (!lesson) return;
+        const slides = buildDeckSlides(lesson);
+        activeLessonId = id;
+        activeSlideIndex = Math.max(0, Math.min(slideIndex, slides.length - 1));
+        lessonKicker.textContent = `Lesson ${lesson.id} · WorkBuddy x Codex`;
+        lessonTitle.textContent = lesson.title;
+        lessonIntro.textContent = lesson.intro;
+        markLessonCompleteButton.dataset.lessonId = String(lesson.id);
+        homeView.style.display = "none";
+        lessonStage.classList.add("open");
+        renderDeck(lesson, slides, activeSlideIndex);
+        updateHash(id, activeSlideIndex);
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+
+      window.openLesson = openLessonDeck;
+
+      function closeLessonDeck() {
+        activeLessonId = null;
+        activeSlideIndex = 0;
+        lessonStage.classList.remove("open");
+        homeView.style.display = "";
+        history.replaceState(null, "", location.pathname);
+        document.getElementById("path").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      window.closeLesson = closeLessonDeck;
+
+      function goToSlide(index) {
+        const lesson = currentLesson();
+        if (!lesson) return;
+        const slides = buildDeckSlides(lesson);
+        activeSlideIndex = Math.max(0, Math.min(index, slides.length - 1));
+        renderDeck(lesson, slides, activeSlideIndex);
+        updateHash(lesson.id, activeSlideIndex);
+      }
+
+      function nextSlide() {
+        const lesson = currentLesson();
+        if (!lesson) return;
+        const slides = buildDeckSlides(lesson);
+        if (activeSlideIndex < slides.length - 1) {
+          goToSlide(activeSlideIndex + 1);
+          return;
+        }
+        completeLesson(lesson.id);
+        const nextLessonId = lesson.id + 1;
+        if (nextLessonId <= getUnlockedCount()) {
+          openLessonDeck(nextLessonId, 0);
+        } else {
+          closeLessonDeck();
+        }
+      }
+
+      function previousSlide() {
+        if (activeSlideIndex > 0) {
+          goToSlide(activeSlideIndex - 1);
+          return;
+        }
+        if (activeLessonId && activeLessonId > 1) {
+          const previousLessonId = activeLessonId - 1;
+          if (previousLessonId <= getUnlockedCount()) {
+            const previousLesson = lessons.find(item => item.id === previousLessonId);
+            openLessonDeck(previousLessonId, buildDeckSlides(previousLesson).length - 1);
+          }
+        }
+      }
+
+      function openLessonFromHashV2() {
+        const match = location.hash.match(/^#lesson-(\d)(?:-(\d+))?$/);
+        if (!match) return;
+        const lessonId = Number(match[1]);
+        const slideIndex = match[2] ? Number(match[2]) - 1 : 0;
+        if (lessonId >= 1 && lessonId <= lessons.length && lessonId <= getUnlockedCount()) {
+          openLessonDeck(lessonId, slideIndex);
+        }
+      }
+
+      document.addEventListener("click", event => {
+        const openTarget = event.target.closest("[data-open]");
+        const slideJumpTarget = event.target.closest("[data-slide-jump]");
+        if (openTarget) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          openLessonDeck(Number(openTarget.dataset.open));
+          return;
+        }
+        if (slideJumpTarget) {
+          goToSlide(Number(slideJumpTarget.dataset.slideJump));
+        }
+      }, true);
+
+      backToHome.addEventListener("click", closeLessonDeck);
+      prevSlideButton.addEventListener("click", previousSlide);
+      nextSlideButton.addEventListener("click", nextSlide);
+      markLessonCompleteButton.addEventListener("click", () => {
+        const lessonId = Number(markLessonCompleteButton.dataset.lessonId || 0);
+        if (!lessonId) return;
+        completeLesson(lessonId);
+      });
+
+      document.addEventListener("keydown", event => {
+        if (!lessonStage.classList.contains("open")) return;
+        if (event.key === "Escape") closeLessonDeck();
+        if (event.key === "ArrowRight" || event.key === "PageDown") nextSlide();
+        if (event.key === "ArrowLeft" || event.key === "PageUp") previousSlide();
+      });
+
+      renderCardsV2();
+      openLessonFromHashV2();
+    })();
+  </script>
+</body>
+</html>
